@@ -1,0 +1,7 @@
+import api from "./api";
+
+export const login = (username: string, password: string) =>
+  api.post("/auth/login", { username, password });
+
+export const register = (username: string, password: string) =>
+  api.post("/auth/register", { username, password });
