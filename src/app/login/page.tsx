@@ -17,13 +17,9 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
 
-    console.log("Login clicked", { username, password });
-
     try {
       const response = await login(username, password);
-      console.log("Login response:", response.data);
 
-      // CASE 1: Backend returns JWT
       if (response.data?.token) {
         setToken(response.data.token);
       }

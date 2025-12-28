@@ -1,16 +1,26 @@
 "use client";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { token } = useAuth();
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+export default function ProtectedRoute({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (!token) router.push("/login");
-  }, [token, router]);
+    setMounted(true);
 
-  if (!token) return <p>Redirecting...</p>;
+    const token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    }
+  }, [router]);
+
+  if (!mounted) return null;
+
   return <>{children}</>;
 }
