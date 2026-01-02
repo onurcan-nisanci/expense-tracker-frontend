@@ -2,60 +2,86 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "@/lib/auth";
+import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setToken } = useAuth();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
 
     try {
-      const response = await login(username, password);
+      const res = await api.post("/auth/login", {
+        username,
+        password,
+      });
 
-      if (response.data?.token) {
-        setToken(response.data.token);
-      }
-
-      router.push("/expenses");
+      login(res.data.token);
     } catch (err: any) {
-      console.error("Login failed:", err);
+      console.error(err);
       setError("Invalid username or password");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <h1>Login</h1>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <form
+        onSubmit={handleLogin}
+        className="w-full max-w-sm bg-white p-6 rounded shadow"
+      >
+        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
 
-      <form onSubmit={handleSubmit}>
-        <div>
+        {error && (
+          <p className="mb-4 text-sm text-red-500 text-center">{error}</p>
+        )}
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Username</label>
           <input
-            placeholder="Username"
+            type="text"
+            required
             value={username}
-            onChange={e => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full border rounded p-2 focus:outline-none focus:ring focus:ring-blue-200"
           />
         </div>
 
-        <div>
+        <div className="mb-6">
+          <label className="block text-sm font-medium mb-1">Password</label>
           <input
             type="password"
-            placeholder="Password"
+            required
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full border rounded p-2 focus:outline-none focus:ring focus:ring-blue-200"
           />
         </div>
 
-        <button type="submit">Login</button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
+        <p className="mt-4 text-sm text-center">
+          Don’t have an account?{" "}
+          <a href="/register" className="text-blue-500 hover:underline">
+            Register
+          </a>
+        </p>
       </form>
     </div>
   );
