@@ -34,51 +34,66 @@ export default function LoginPage() {
     }
   };
 
+  const inputClass =
+    "w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none transition-shadow placeholder:text-muted focus:border-primary focus:ring-2 focus:ring-primary-soft";
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="flex min-h-[calc(100vh-57px)] items-center justify-center px-4 py-12">
       <form
         onSubmit={handleLogin}
-        className="w-full max-w-sm bg-white p-6 rounded shadow"
+        className="w-full max-w-sm rounded-2xl border border-border bg-surface p-8 shadow-sm animate-fade-in"
       >
-        <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
+        <div className="mb-6 text-center">
+          <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-xl text-white shadow-sm">
+            £
+          </span>
+          <h1 className="mt-4 text-2xl font-bold tracking-tight">
+            Welcome back
+          </h1>
+          <p className="mt-1 text-sm text-muted">
+            Sign in to your account to continue.
+          </p>
+        </div>
 
         {error && (
-          <p className="mb-4 text-sm text-red-500 text-center">{error}</p>
+          <p className="mb-4 rounded-lg bg-danger-soft px-3 py-2 text-sm text-danger">
+            {error}
+          </p>
         )}
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Username</label>
+          <label className="mb-1 block text-sm font-medium">Username</label>
           <input
             type="text"
             required
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full border rounded p-2 focus:outline-none focus:ring focus:ring-blue-200"
+            className={inputClass}
           />
         </div>
 
         <div className="mb-6">
-          <label className="block text-sm font-medium mb-1">Password</label>
+          <label className="mb-1 block text-sm font-medium">Password</label>
           <input
             type="password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border rounded p-2 focus:outline-none focus:ring focus:ring-blue-200"
+            className={inputClass}
           />
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 disabled:opacity-50"
+          className="w-full rounded-lg bg-primary py-2.5 font-medium text-white shadow-sm transition-colors hover:bg-primary-hover disabled:opacity-60"
         >
-          {loading ? "Logging in..." : "Login"}
+          {loading ? "Signing in…" : "Sign in"}
         </button>
 
-        <p className="mt-4 text-sm text-center">
+        <p className="mt-5 text-center text-sm text-muted">
           Don’t have an account?{" "}
-          <a href="/register" className="text-blue-500 hover:underline">
+          <a href="/register" className="font-medium text-primary hover:underline">
             Register
           </a>
         </p>
